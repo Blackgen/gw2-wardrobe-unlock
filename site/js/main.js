@@ -629,9 +629,9 @@ function calculateTotalValue(tpItems, priceFunc) {
 function getSellPrice(item) {
 	var itemValue = NaN;
 	if (item.priceData != null) {
-		itemValue = item.priceData.sellPrice;
+		itemValue = item.priceData.bestSellPrice.price;
 		if (isNaN(itemValue)) {
-			itemValue = item.priceData.buyPrice;
+			itemValue = item.priceData.bestBuyPrice.price;
 		}
 	}
 	var vendorPrice = getVendorPrice(item);
@@ -644,9 +644,9 @@ function getSellPrice(item) {
 function getBuyPrice(item) {
 	var itemValue = NaN;
 	if (item.priceData != null) {
-		itemValue = item.priceData.buyPrice;
+		itemValue = item.priceData.bestBuyPrice.price;
 		if (isNaN(itemValue)) {
-			itemValue = item.priceData.sellPrice;
+			itemValue = item.priceData.bestSellPrice.price;
 		}
 	}
 	var vendorPrice = getVendorPrice(item);
@@ -954,19 +954,19 @@ function showDetails(item, prefix) {
 	}
 	
 	if (item.priceData) {
-		if (item.priceData.buyPrice) {
-			$('#' + prefix + 'selection-buy-gold').text(Math.floor(item.priceData.buyPrice / 10000));
-			$('#' + prefix + 'selection-buy-silver').text(Math.floor(item.priceData.buyPrice / 100) % 100);
-			$('#' + prefix + 'selection-buy-copper').text(item.priceData.buyPrice % 100);
+		if (item.priceData.bestBuyPrice.price) {
+			$('#' + prefix + 'selection-buy-gold').text(item.priceData.bestBuyPrice.itemId +"  -  "+ Math.floor(item.priceData.bestBuyPrice.price / 10000));
+			$('#' + prefix + 'selection-buy-silver').text(Math.floor(item.priceData.bestBuyPrice.price / 100) % 100);
+			$('#' + prefix + 'selection-buy-copper').text(item.priceData.bestBuyPrice.price % 100);
 		} else {
 			$('#' + prefix + 'selection-buy-gold').text('0');
 			$('#' + prefix + 'selection-buy-silver').text('0');
 			$('#' + prefix + 'selection-buy-copper').text('0');
 		}
-		if (item.priceData.sellPrice) {
-			$('#' + prefix + 'selection-sell-gold').text(Math.floor(item.priceData.sellPrice / 10000));
-			$('#' + prefix + 'selection-sell-silver').text(Math.floor(item.priceData.sellPrice / 100) % 100);
-			$('#' + prefix + 'selection-sell-copper').text(item.priceData.sellPrice % 100);
+		if (item.priceData.bestSellPrice.price) {
+			$('#' + prefix + 'selection-sell-gold').text(Math.floor(item.priceData.bestSellPrice.price / 10000));
+			$('#' + prefix + 'selection-sell-silver').text(Math.floor(item.priceData.bestSellPrice.price / 100) % 100);
+			$('#' + prefix + 'selection-sell-copper').text(item.priceData.bestSellPrice.price % 100);
 		} else {
 			$('#' + prefix + 'selection-sell-gold').text('-');
 			$('#' + prefix + 'selection-sell-silver').text('-');
