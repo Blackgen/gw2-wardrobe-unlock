@@ -3,6 +3,7 @@ package au.net.immortius.wardrobe.site.entities;
 import au.net.immortius.wardrobe.gw2api.Rarity;
 import com.google.common.collect.Lists;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -20,7 +21,8 @@ public class UnlockData {
     public String chatcode;
     public Set<String> sources;
     private List<VendorInfo> vendors;
-    public Price priceData;
+    public TradingPostEntry priceData;
+    public Set<SameSkinEntry> variations = new HashSet<>();
 
     /**
      * @return The list of vendors from which this unlock can be purchased
