@@ -159,7 +159,9 @@ public class GenerateContent {
                             itemGroup.content.add(unlock);
                         }
                     }
-                    itemGroup.content.sort(Comparator.comparing((UnlockData a) -> a.rarity).thenComparing(a -> a.name).thenComparing(a -> a.id));
+                    itemGroup.content.sort(Comparator.comparing((UnlockData a) -> a.rarity)
+                            .thenComparing(a -> a.name)
+                            .thenComparing(a -> a.id));
                     groups.add(itemGroup);
                 } catch (JsonSyntaxException e) {
                     logger.error("Failed to read {}", groupFile, e);
@@ -346,11 +348,19 @@ public class GenerateContent {
             try (Reader priceLookupReader = Files.newBufferedReader(config.paths.getUnlockPricesPath().resolve(unlockCategoryConfig.id + ".json"))) {
                 Map<Integer, TradingPostEntry> priceLookup = gson.fromJson(priceLookupReader, PRICE_MAP_TYPE.getType());
                 for (Map.Entry<Integer, TradingPostEntry> entry : priceLookup.entrySet()) {
-                    UnlockData unlockData = unlockDataMap.get(entry.getKey());
+                    Integer itemId = entry.getKey();
+                    UnlockData unlockData = unlockDataMap.get(itemId);
                     if (unlockData == null) {
-                        logger.error("Found price for missing unlock {} of type {}", entry.getKey(), unlockCategoryConfig.id);
+                        logger.error("Found price for missing unlock {} of type {}", itemId, unlockCategoryConfig.id);
                     } else {
-                        unlockData.priceData = entry.getValue();
+                        TradingPostEntry tpEntry = entry.getValue();
+                        PriceEntry bestBuyPrice = tpEntry.getBestBuyPrice();
+                        unlocks.readItem(bestBuyPrice.getItemId())
+                                .ifPresent(i -> bestBuyPrice.setItemName(i.getName()));
+                        PriceEntry bestSellPrice = tpEntry.getBestSellPrice();
+                        unlocks.readItem(bestSellPrice.getItemId())
+                                .ifPresent(i -> bestSellPrice.setItemName(i.getName()));
+                        unlockData.priceData = tpEntry;
                         unlockData.sources.add(GOLD);
                         unlockData.sources.add(TRADINGPOST);
                         addVariation(unlockData);

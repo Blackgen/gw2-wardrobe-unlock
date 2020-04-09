@@ -57,22 +57,15 @@ public class Unlocks {
     }
 
     /**
-     * @param category The category of unlocks
      * @param id The id to obtain data for
      * @return The requested unlock, or {@link Optional#empty()}
      */
-    public Optional<ItemData> get(UnlockCategoryConfig category, int id) {
-        Path itemFile = config.paths.getApiPath().resolve(category.source).resolve(id + ".json");
+    public Optional<ItemData> readItem(int id) {
+        Path itemFile = config.paths.getApiPath().resolve("items").resolve(id + ".json");
         if (Files.exists(itemFile)) {
             try (Reader itemReader = Files.newBufferedReader(itemFile)) {
                 ItemData itemData = gson.fromJson(itemReader, ItemData.class);
-                if (category.typeFilter != null && !category.typeFilter.equals(itemData.type)) {
-                    return Optional.empty();
-                }
-                if (Strings.isNullOrEmpty(itemData.getName()) && !category.getForceAdd().contains(id)) {
-                    return Optional.empty();
-                }
-                if (category.getExcludeIds().contains(itemData.id)) {
+                if (Strings.isNullOrEmpty(itemData.getName())) {
                     return Optional.empty();
                 }
                 return Optional.of(itemData);

@@ -28,7 +28,7 @@ var acquisitionMethods = [
 	{ id : "unstablecosmicessence", name : "Unstable Cosmic Essence", category : "Fractals"},
 	{ id : "spiritshard", name : "Spirit Shard", category : "Standard Currency", hideOnIcon : true},
 	{ id : "guildcommendation", name : "Guild Commendation", category : "Standard Currency"},
-	{ id : "event", name : "Event", category : "Standard Acquisition"}, 
+	{ id : "event", name : "Event", category : "Standard Acquisition"},
 	{ id : "pvp", name : "Reward Track", category : "Player vs Player"},
 	{ id : "pvplt", name : "PvP League Ticket", category : "Player vs Player"},
 	{ id : "pvptournament", name : "PvP Automated Tournament", category : "Player vs Player"},
@@ -54,12 +54,12 @@ var acquisitionMethods = [
 	{ id : "bauble", name : "Bauble Bubbles", category : "Seasonal Event"},
     { id : "bundleofloot", name : "Bundle Of Loot", category : "Seasonal Event"},
 	{ id : "festivaltoken", name : "Festival Token", category : "Seasonal Event"},
-	{ id : "favorofthefestival", name : "Favor of the Festival", category : "Seasonal Event"},	
+	{ id : "favorofthefestival", name : "Favor of the Festival", category : "Seasonal Event"},
 	{ id : 'banditcrest', name : "Bandit Crest", category : "Living Story 2"},
     { id : "candycorncob", name : "Candy Corn Cob", category : "Seasonal Event"},
 	{ id : "snowdiamond", name : "Snow Diamond", category : "Seasonal Event"},
 	{ id : "enchantedsnowball", name : "Enchanted Snowball", category : "Seasonal Event"},
-	{ id : "snowflake", name : "Snowflake", category : "Seasonal Event"},	
+	{ id : "snowflake", name : "Snowflake", category : "Seasonal Event"},
     { id : "birthday1", name : "First Birthday", category : "Birthday"},
     { id : "birthday3", name : "Third Birthday", category : "Birthday"},
     { id : "birthday4", name : "Forth Birthday", category : "Birthday"},
@@ -107,12 +107,12 @@ var acquisitionMethods = [
 	{ id : "grandmastertailorsmark", name : "Grandmaster Tailor's Mark", hideOnIcon : true, category : "Craftable"},
 	{ id : "grandmasterleatherworkersmark", name : "Grandmaster Leatherworker's Mark", hideOnIcon : true, category : "Craftable"},
 	{ id : "grandmasterarmorsmithsmark", name : "Grandmaster Armorsmith's Mark", hideOnIcon : true, category : "Craftable"}];
-	
+
 var acquisitionMethodsLookup = {}
 for (method of acquisitionMethods) { acquisitionMethodsLookup[method.id] = method }
-			
-function gwuFilter(x) {return x.sources.includes('gwu')}			
-			
+
+function gwuFilter(x) {return x.sources.includes('gwu')}
+
 function setupMenuItems() {
 	$('.nav li').click(function() {
 		$('.page').toggleClass('hidden', true);
@@ -138,9 +138,9 @@ function updateThresholdCalculation() {
 	}
 	var allItems = ($('#analyse-selection')[0].value == 'all')
 	console.log('allItems ' + allItems)
-	
+
 	$("div[id*=list-entry-]").remove();
-	
+
 	var threshold = $('#min-gold-value')[0].value * 10000;
 	var totalCost = 0;
 	var total = 0;
@@ -161,7 +161,7 @@ function updateThresholdCalculation() {
 			}
 		}
 	}
-	
+
 	items.sort(function (a, b) {
 		return a.price - b.price;
 	});
@@ -174,14 +174,14 @@ function updateThresholdCalculation() {
 		list += '<div class="entry" id="list-entry-' + item.section + '-' + item.details.id + '"><div class="entry-name">' + item.name + '</div><div class="entry-price"><span>' + gold + '</span><span class="base-icon gold-icon" role="img" aria-label="Gold"></span>'
 		      + ' <span id="min-unlock-silver">' + silver + '</span><span class="base-icon silver-icon" role="img" aria-label="Silver"></span>'
 			  + ' <span id="min-unlock-copper">' + copper + '</span><span class="base-icon copper-icon" role="img" aria-label="Copper"></span></div></div>';
-	}	
-	
+	}
+
 	$('#min-unlock-gold').text(Math.floor(totalCost / 10000));
 	$('#min-unlock-silver').text(Math.floor(totalCost / 100) % 100);
 	$('#min-unlock-copper').text(totalCost % 100);
 	$('#min-total').text(total);
 	$('#analyse-list').append(list);
-	
+
 	for (var item of items) {
 		$('#list-entry-' + item.section + '-' + item.details.id).click(function(item) {
 			showDetails(item, 'analyse-');
@@ -232,7 +232,7 @@ function addAcquisitionFilters() {
 	var filter = $('.filter-selection').change(function() {
 		updateFilter($('#filter-by-acquisition')[0].value, $('#gwu-toggle')[0].checked);
 	});
-	
+
 }
 
 function addAcquisitionDetails(prefix) {
@@ -243,9 +243,9 @@ function addAcquisitionDetails(prefix) {
 }
 
 function buildSite(data) {
-	
+
 	$('.lds-container').remove()
-	
+
 	metadata = data;
 	for (o of metadata.images) {
 		imageMap[o.name] = o.image;
@@ -257,34 +257,34 @@ function buildSite(data) {
 	addAcquisitionFilters();
     addAcquisitionDetails('');
 	addAcquisitionDetails('analyse-');
-		
+
 	$('#api-key').change(function(event) {
 		event.preventDefault();
 		key = $('#api-key').val().trim()
 		if (key.length == 72) {
 			if (storageAvailable('localStorage')) {
-				localStorage.setItem('key', key); 
+				localStorage.setItem('key', key);
 			}
 			filterWithApiKey(key);
 		} else {
 			if (storageAvailable('localStorage')) {
-				localStorage.removeItem('key'); 
+				localStorage.removeItem('key');
 			}
 			clear();
 		}
 	});
-	
+
 	$('#clear-unlocks').submit(function(event) {
 		event.preventDefault();
 		$('#api-error').toggleClass('hidden', true);
 		clear();
 	}.bind(this));
-	
+
 	$('#filter-by-acquisition')[0].value = 'all';
 	$('#filter-by-acquisition').change(function() {
 		updateFilter(this.value, $('#gwu-toggle')[0].checked);
 	});
-	
+
 	$('#rendering-mode-selection')[0].value = 'icon';
 	$('#rendering-mode-selection').change(function() {
 		if (this.value == 'icon') {
@@ -293,17 +293,17 @@ function buildSite(data) {
 			$('#rendering-mode').attr('href', 'css/text-mode.css');
 		}
 	});
-	
+
 	$('#gwu-toggle').change(function() {
 		updateFilter($('#filter-by-acquisition')[0].value, this.checked);
 	});
-	
+
 	if (storageAvailable('localStorage')) {
 		if (localStorage.getItem('key')) {
 			var key = localStorage.getItem('key');
-			$('#api-key').val(key); 
+			$('#api-key').val(key);
 			filterWithApiKey(key);
-		} 
+		}
 		var gwuOnly = false;
 		var filter = 'all';
 		if (localStorage.getItem('gwu-only')) {
@@ -324,7 +324,7 @@ function updateFilter(displayMode, gwuOnly) {
 	$('.tp-buy-sorted').toggleClass('hidden', displayMode != 'tp-buy' && displayMode != 'buy');
 	$('.tp-sell-sorted').toggleClass('hidden', displayMode != 'tp-sell' && displayMode != 'sell');
 	$('#advanced-filter-section').toggleClass('hidden', displayMode != 'advanced');
-	
+
 	if (displayMode == 'setbuy') {
 	    sortGroupsByBuyTotal();
 	} else if (displayMode == 'setsell') {
@@ -332,7 +332,7 @@ function updateFilter(displayMode, gwuOnly) {
 	} else {
 		sortGroupsByName();
 	}
-	
+
 	if (displayMode == 'tp-buy' || displayMode == 'tp-sell') {
 		$('.item').not('.tp').toggleClass('hidden', true);
 	}
@@ -374,7 +374,7 @@ function updateFilter(displayMode, gwuOnly) {
 	updateCounts();
 	updateSectionFolding();
 	if (storageAvailable('localStorage')) {
-		localStorage.setItem('gwu-only', gwuOnly); 
+		localStorage.setItem('gwu-only', gwuOnly);
 		localStorage.setItem('filter', displayMode);
 	}
 }
@@ -383,14 +383,14 @@ function sortGroupsByBuyTotal() {
 	$('.section-groups').each(function (index, section) {
 		$(section.children).sort(function (a, b) { return parseInt(a.dataset.buyTotal) - parseInt(b.dataset.buyTotal); }).appendTo(section)
 	});
-	
+
 }
 
 function sortGroupsBySellTotal() {
 	$('.section-groups').each(function (index, section) {
 		$(section.children).sort(function (a, b) { return parseInt(a.dataset.sellTotal) - parseInt(b.dataset.sellTotal); }).appendTo(section)
 	});
-	
+
 }
 
 function sortGroupsByName() {
@@ -401,10 +401,10 @@ function sortGroupsByName() {
 
 function processAdvancedFilter() {
 	$('.item').toggleClass('hidden', true);
-	$(".filter-selection option:selected[value='include']").each(function (index, filter) { 
+	$(".filter-selection option:selected[value='include']").each(function (index, filter) {
 		$('.item.' + $(filter).data("id")).toggleClass('hidden', false);
 	});
-	$(".filter-selection option:selected[value='exclude']").each(function (index, filter) { 
+	$(".filter-selection option:selected[value='exclude']").each(function (index, filter) {
 		$('.item.' + $(filter).data("id")).toggleClass('hidden', true);
 	});
 }
@@ -414,7 +414,7 @@ function filterWithApiKey(key) {
 		var sectionData = metadata.items[sectionIndex];
 		if (sectionData.unlockUrl) {
 			$.ajax({
-				url: sectionData.unlockUrl + '?access_token=' + key, 
+				url: sectionData.unlockUrl + '?access_token=' + key,
 				dataType: 'json',
 				success: function(sectionData, result) {
 					$('#api-error').toggleClass('hidden', true);
@@ -426,7 +426,7 @@ function filterWithApiKey(key) {
 					contentSection.find('.item').toggleClass('unlocked', false);
 					buySection.find('.item').toggleClass('unlocked', false);
 					sellSection.find('.item').toggleClass('unlocked', false);
-					
+
 					var unlockedBuyValue = 0;
 					var unlockedSellValue = 0;
 					var unlockedCount = 0;
@@ -435,7 +435,7 @@ function filterWithApiKey(key) {
 					var gwuUnlockedCount = 0;
 					var sectionBuyPrices = buyPriceLookup[sectionData.id];
 					var sectionSellPrices = sellPriceLookup[sectionData.id];
-												
+
 					for (var i = 0; i < result.length; ++i) {
 						var id = result[i];
 						if (typeof id === 'object') {
@@ -467,16 +467,16 @@ function filterWithApiKey(key) {
 							}
 						}
 					}
-					
+
 					counts[sectionData.id].unlocked = unlockedCount;
 					counts[sectionData.id].unlockedBuyValue = unlockedBuyValue;
 					counts[sectionData.id].unlockedSellValue = unlockedSellValue;
 					gwuCounts[sectionData.id].unlocked = gwuUnlockedCount;
 					gwuCounts[sectionData.id].unlockedBuyValue = gwuUnlockedBuyValue;
 					gwuCounts[sectionData.id].unlockedSellValue = gwuUnlockedSellValue;
-					
+
 					updateCounts();
-					updateGroupVisibility();	
+					updateGroupVisibility();
 					updateThresholdCalculation();
 				}.bind(null, sectionData),
 				error: function(val) {
@@ -484,7 +484,7 @@ function filterWithApiKey(key) {
 					clear();
 					console.log('Error', val);
 				}
-			});		
+			});
 		}
 	}
 }
@@ -522,7 +522,7 @@ function updateCountsType(type, countData) {
             $('#' + section + '-' + type + 'buy-unlocked-gold').text(Math.floor(countData[section].unlockedBuyValue / 10000));
             $('#' + section + '-' + type + 'buy-unlocked-silver').text(Math.floor(countData[section].unlockedBuyValue / 100) % 100);
             $('#' + section + '-' + type + 'buy-unlocked-copper').text(countData[section].unlockedBuyValue % 100);
-            
+
             $('#' + section + '-' + type + 'total-sell-gold').text(Math.floor(countData[section].totalSellValue / 10000));
             $('#' + section + '-' + type + 'total-sell-silver').text(Math.floor(countData[section].totalSellValue / 100) % 100);
             $('#' + section + '-' + type + 'total-sell-copper').text(countData[section].totalSellValue % 100);
@@ -554,9 +554,9 @@ function updateCountsType(type, countData) {
 }
 
 function buildTPSorted(sectionId, tpItems, priceLookup, priceFunc, prefix) {
-	var itemPriceLookup = {};		
+	var itemPriceLookup = {};
 	priceLookup[sectionId] = itemPriceLookup;
-	
+
 	for (var i = 0; i < tpItems.length; ++i) {
 		var itemValue = priceFunc(tpItems[i]);
 		if (!isNaN(itemValue)) {
@@ -565,7 +565,7 @@ function buildTPSorted(sectionId, tpItems, priceLookup, priceFunc, prefix) {
 			itemPriceLookup[tpItems[i].id] = {'name' : tpItems[i].name, 'price' : 0, 'gwu' : tpItems[i].sources.includes('gwu'), 'details' : tpItems[i], 'section' : sectionId};
 		}
 	}
-	
+
 	tpItems.sort(function (a, b) {
 		var valA = priceFunc(a);
 		var valB = priceFunc(b);
@@ -580,8 +580,8 @@ function buildTPSorted(sectionId, tpItems, priceLookup, priceFunc, prefix) {
 		}
 		return valA - valB;
 	});
-	
-	
+
+
 	if (tpItems.length > 0) {
 		var items = populateContent(tpItems, sectionId + '-' + prefix + '-tp');
 		var section = '';
@@ -599,7 +599,7 @@ function buildSections() {
 		var sectionData = metadata.items[sectionIndex];
 		populateGroupNames(sectionData);
 		buildSection(root, sectionData);
-	}	
+	}
 }
 
 function populateGroupNames(sectionData) {
@@ -666,7 +666,7 @@ function getVendorPrice(item) {
 	}
 	return vendorPrice;
 }
-	
+
 function buildSection(root, sectionData) {
 	var section = '<details id="' + sectionData.id + '-section" class="section" open="true"><summary class="section-header">' + sectionData.name + '</summary>';
 	var count = 0;
@@ -683,24 +683,24 @@ function buildSection(root, sectionData) {
 	gwuCountData.total = gwuCount;
 	gwuCountData.unlocked = 0;
 	gwuCounts[sectionData.id] = gwuCountData;
-	
+
 	var tpItems = extractTPItems(sectionData);
-	
+
 	var groups = buildSectionGroups(sectionData);
 	var sellSection = buildTPSorted(sectionData.id, tpItems, sellPriceLookup, getSellPrice, 'sell');
 	var buySection = buildTPSorted(sectionData.id, tpItems, buyPriceLookup, getBuyPrice, 'buy');
-	
+
 	countData.totalBuyValue = calculateTotalValue(tpItems, getBuyPrice);
 	countData.totalSellValue = calculateTotalValue(tpItems, getSellPrice);
 	countData.unlockedBuyValue = 0;
 	countData.unlockedSellValue = 0;
-	
+
 	gwuCountData.totalBuyValue = calculateTotalValue(tpItems.filter(gwuFilter), getBuyPrice);
 	gwuCountData.totalSellValue = calculateTotalValue(tpItems.filter(gwuFilter), getSellPrice);
 	gwuCountData.unlockedBuyValue = 0;
 	gwuCountData.unlockedSellValue = 0;
-	
-	if (!sectionData.unlockUrl) {		
+
+	if (!sectionData.unlockUrl) {
 	  section += '<p>Note: Account unlock information not available for this section</p>';
 	} else {
 	  section += '<div class="section-counts">';
@@ -709,20 +709,20 @@ function buildSection(root, sectionData) {
 	  section += '<span id="' + sectionData.id + '-buy-total-gold">' + Math.floor(countData.totalBuyValue / 10000) + '</span><span class="base-icon gold-icon" role="img" aria-label="Gold"></span> ';
 	  section += '<span id="' + sectionData.id + '-buy-total-silver">' + (Math.floor(countData.totalBuyValue / 100) % 100) + '</span><span class="base-icon silver-icon" role="img" aria-label="Silver"></span> ';
 	  section += '<span id="' + sectionData.id + '-buy-total-copper">' + (countData.totalBuyValue % 100) + '</span><span class="base-icon copper-icon" role="img" aria-label="Copper"></span></p>';
-	  
+
 	  section += '<p>Unlocked by sell value: <span id="' + sectionData.id + '-sell-unlocked-gold">0</span><span class="base-icon gold-icon" role="img" aria-label="Gold"></span> <span id="' + sectionData.id + '-sell-unlocked-silver">0</span><span class="base-icon silver-icon" role="img" aria-label="Silver"></span> <span id="' + sectionData.id + '-sell-unlocked-copper">0</span><span class="base-icon copper-icon" role="img" aria-label="Copper"></span> of ';
 	  section += '<span id="' + sectionData.id + '-sell-total-gold">' + Math.floor(countData.totalSellValue / 10000) + '</span><span class="base-icon gold-icon" role="img" aria-label="Gold"></span> ';
 	  section += '<span id="' + sectionData.id + '-sell-total-silver">' + (Math.floor(countData.totalSellValue / 100) % 100) + '</span><span class="base-icon silver-icon" role="img" aria-label="Silver"></span> ';
 	  section += '<span id="' + sectionData.id + '-sell-total-copper">' + (countData.totalSellValue % 100) + '</span><span class="base-icon copper-icon" role="img" aria-label="Copper"></span></p>';
 	  section += '</div>';
-	  
+
 	  section += '<div class="gwu-section-counts hidden">';
 	  section += '<p id="' + sectionData.id + '-gwu-count">Unlocked: <span id="' + sectionData.id + '-gwu-unlocked-count">0</span> / <span id="' + sectionData.id + '-gwu-total-count">' +  gwuCount + '</span></p>';
 	  section += '<p>Unlocked by buy value: <span id="' + sectionData.id + '-gwu-buy-unlocked-gold">0</span><span class="base-icon gold-icon" role="img" aria-label="Gold"></span> <span id="' + sectionData.id + '-gwu-buy-unlocked-silver">0</span><span class="base-icon silver-icon" role="img" aria-label="Silver"></span> <span id="' + sectionData.id + '-gwu-buy-unlocked-copper">0</span><span class="base-icon copper-icon" role="img" aria-label="Copper"></span> of '
 	  section += '<span id="' + sectionData.id + '-gwu-buy-total-gold">' + Math.floor(gwuCountData.totalBuyValue / 10000) + '</span><span class="base-icon gold-icon" role="img" aria-label="Gold"></span> ';
 	  section += '<span id="' + sectionData.id + '-gwu-buy-total-silver">' + (Math.floor(gwuCountData.totalBuyValue / 100) % 100) + '</span><span class="base-icon silver-icon" role="img" aria-label="Silver"></span> ';
 	  section += '<span id="' + sectionData.id + '-gwu-buy-total-copper">' + (gwuCountData.totalBuyValue % 100) + '</span><span class="base-icon copper-icon" role="img" aria-label="Copper"></span></p>';
-	  
+
 	  section += '<p>Unlocked by sell value: <span id="' + sectionData.id + '-gwu-sell-unlocked-gold">0</span><span class="base-icon gold-icon" role="img" aria-label="Gold"></span> <span id="' + sectionData.id + '-gwu-sell-unlocked-silver">0</span><span class="base-icon silver-icon" role="img" aria-label="Silver"></span> <span id="' + sectionData.id + '-gwu-sell-unlocked-copper">0</span><span class="base-icon copper-icon" role="img" aria-label="Copper"></span> of ';
 	  section += '<span id="' + sectionData.id + '-gwu-sell-total-gold">' + Math.floor(gwuCountData.totalSellValue / 10000) + '</span><span class="base-icon gold-icon" role="img" aria-label="Gold"></span> ';
 	  section += '<span id="' + sectionData.id + '-gwu-sell-total-silver">' + (Math.floor(gwuCountData.totalSellValue / 100) % 100) + '</span><span class="base-icon silver-icon" role="img" aria-label="Silver"></span> ';
@@ -742,11 +742,11 @@ function buildSection(root, sectionData) {
 	}
 	section += '</details>';
 	root.append(section);
-	
+
 	if (sectionData.groups.length > 1) {
 		for (var groupIndex = 0; groupIndex < sectionData.groups.length; ++groupIndex) {
 			var groupData = sectionData.groups[groupIndex];
-			setupClickHandlers(sectionData.id, groupData.content)									
+			setupClickHandlers(sectionData.id, groupData.content)
 		}
 	} else {
 		setupClickHandlers(sectionData.id, sectionData.groups[0].content)
@@ -779,7 +779,7 @@ function buildSectionGroups(sectionData) {
 }
 
 function extractTPItems(sectionData) {
-	var tpItems = [];	
+	var tpItems = [];
 	for (var groupIndex = 0; groupIndex < sectionData.groups.length; ++groupIndex) {
 		var groupData = sectionData.groups[groupIndex];
 		for (var itemIndex = 0; itemIndex < groupData.content.length; ++itemIndex) {
@@ -861,7 +861,7 @@ function addSources(itemData) {
 function populateContent(content, typeId) {
 	var result = '';
 	for (var i = 0; i < content.length; ++i) {
-		var itemData = content[i];		
+		var itemData = content[i];
 		var item = displayItem(itemData, typeId + '-' + itemData.id);
 		if (itemData.color) {
 			item += '<div class="swatch" style="background-color: ' + itemData.color + ';"></div>';
@@ -878,7 +878,7 @@ function populateContent(content, typeId) {
 
 function setupClickHandlers(typeId, content) {
 	for (var i = 0; i < content.length; ++i) {
-		var itemData = content[i];		
+		var itemData = content[i];
 		var selection = $('#' + typeId + '-' + itemData.id);
 		selection.click(function(item) {
 			showDetails(item, '');
@@ -908,9 +908,9 @@ function showDetails(item, prefix) {
 	$('#' + prefix + 'selection-chat-code').toggle(item.chatcode != null);
 	$('#' + prefix + 'selection-chat-code').children('span').text(item.chatcode);
 	$('#' + prefix + 'selection-id').children('span').text(item.id);
-	
+
 	for (method of acquisitionMethods) {
-		$('#' + prefix + 'acquisition-' + method.id).toggle($.inArray(method.id, item.sources) != -1);   
+		$('#' + prefix + 'acquisition-' + method.id).toggle($.inArray(method.id, item.sources) != -1);
 	}
 	$('#' + prefix + 'selection-tp-info').toggle($.inArray("tp", item.sources) != -1);
 	if (item.vendors && item.vendors.length > 0) {
@@ -938,21 +938,24 @@ function showDetails(item, prefix) {
 					entry += ' ' + copper + '<span class="base-icon copper-icon" role="img" aria-label="Copper"></span>';
 				} else if (acquisitionMethodsLookup[item.vendors[i].cost[j].type] != null) {
 					method = acquisitionMethodsLookup[item.vendors[i].cost[j].type]
-					entry += ' ' + item.vendors[i].cost[j].value + '<span class="base-icon ' + method.id + '-icon" role="img" aria-label="' + method.name + '"></span>'; 
+					entry += ' ' + item.vendors[i].cost[j].value + '<span class="base-icon ' + method.id + '-icon" role="img" aria-label="' + method.name + '"></span>';
 				} else if (item.vendors[i].cost[j].type == "karma") {
-					entry += ' ' + item.vendors[i].cost[j].value + '<span class="base-icon karma-icon" role="img" aria-label="Karma"></span>'; 
+					entry += ' ' + item.vendors[i].cost[j].value + '<span class="base-icon karma-icon" role="img" aria-label="Karma"></span>';
 				} else {
-					entry += ' ' + item.vendors[i].cost[j].value + ' ' + item.vendors[i].cost[j].type; 
+					entry += ' ' + item.vendors[i].cost[j].value + ' ' + item.vendors[i].cost[j].type;
 				}
 			}
 			entry += '</div>';
 			vendorList.append(entry);
 		}
 	}
-	
+
 	if (item.priceData) {
 		if (item.priceData.bestBuyPrice.price) {
-			$('#' + prefix + 'selection-buy-gold').text(item.priceData.bestBuyPrice.itemId +"  -  "+ Math.floor(item.priceData.bestBuyPrice.price / 10000));
+		  if(item.priceData.bestBuyPrice.itemId != item.id) {
+		    $('#' + prefix + 'selection-buy-name').text("(Name: " + item.priceData.bestBuyPrice.itemName + ")");
+		  }
+			$('#' + prefix + 'selection-buy-gold').text(Math.floor(item.priceData.bestBuyPrice.price / 10000));
 			$('#' + prefix + 'selection-buy-silver').text(Math.floor(item.priceData.bestBuyPrice.price / 100) % 100);
 			$('#' + prefix + 'selection-buy-copper').text(item.priceData.bestBuyPrice.price % 100);
 		} else {
@@ -961,6 +964,9 @@ function showDetails(item, prefix) {
 			$('#' + prefix + 'selection-buy-copper').text('0');
 		}
 		if (item.priceData.bestSellPrice.price) {
+		  if(item.priceData.bestSellPrice.itemId != item.id) {
+		    $('#' + prefix + 'selection-sell-name').text("(Name: " + item.priceData.bestSellPrice.itemName + ")");
+    	}
 			$('#' + prefix + 'selection-sell-gold').text(Math.floor(item.priceData.bestSellPrice.price / 10000));
 			$('#' + prefix + 'selection-sell-silver').text(Math.floor(item.priceData.bestSellPrice.price / 100) % 100);
 			$('#' + prefix + 'selection-sell-copper').text(item.priceData.bestSellPrice.price % 100);
